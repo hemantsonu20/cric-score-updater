@@ -1,0 +1,22 @@
+language: java
+jdk: 
+  - oraclejdk8
+script:
+  - ./travis.sh
+#  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install 
+#  - mvn sonar:sonar
+#  - mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar
+
+notifications:
+  email
+    - hemantsonu20@gmail.com
+addons:
+  sonarqube:
+    token:
+      secure: $SONAR_GITHUB_TOKEN
+      
+before_install:
+  - chmod +x ./travis.sh
+#branches:
+#  only:
+#    - master
