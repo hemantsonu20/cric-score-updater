@@ -14,16 +14,36 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.common.model;
+package com.github.cric.common.service.cripapi;
+
+import java.time.ZonedDateTime;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Match {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Raw match data as returned from cripapi
+ * 
+ */
+@JsonIgnoreProperties(value = { "squad" }, ignoreUnknown = true)
+class RawMatch {
+
+    @JsonProperty("unique_id")
     private int matchId;
+
+    @JsonProperty("matchStarted")
     private boolean matchStarted;
-    private Team firstTeam;
-    private Team secondTeam;
+
+    @JsonProperty("team-1")
+    private String firstTeam;
+
+    @JsonProperty("team-2")
+    private String secondTeam;
+
+    @JsonProperty("date")
+    private ZonedDateTime date;
 
     public int getMatchId() {
 
@@ -35,40 +55,51 @@ public class Match {
         return matchStarted;
     }
 
-    public Team getFirstTeam() {
+    public String getFirstTeam() {
 
         return firstTeam;
     }
 
-    public Team getSecondTeam() {
+    public String getSecondTeam() {
 
         return secondTeam;
     }
 
-    public Match setMatchId(int matchId) {
+    public ZonedDateTime getDate() {
+
+        return date;
+    }
+
+    public RawMatch setMatchId(int matchId) {
 
         this.matchId = matchId;
         return this;
     }
 
-    public Match setMatchStarted(boolean matchStarted) {
+    public RawMatch setMatchStarted(boolean matchStarted) {
 
         this.matchStarted = matchStarted;
         return this;
     }
 
-    public Match setFirstTeam(Team firstTeam) {
+    public RawMatch setFirstTeam(String firstTeam) {
 
         this.firstTeam = firstTeam;
         return this;
     }
 
-    public Match setSecondTeam(Team secondTeam) {
+    public RawMatch setSecondTeam(String secondTeam) {
 
         this.secondTeam = secondTeam;
         return this;
     }
-    
+
+    public RawMatch setDate(ZonedDateTime date) {
+
+        this.date = date;
+        return this;
+    }
+
     @Override
     public String toString() {
 
@@ -77,6 +108,7 @@ public class Match {
         .append(matchStarted)
         .append(firstTeam)
         .append(secondTeam)
+        .append(date)
         .build();
     }
 }

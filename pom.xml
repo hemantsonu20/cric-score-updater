@@ -18,7 +18,7 @@
         <commons.lang.version>3.0</commons.lang.version>
         <testng.version>6.8.5</testng.version>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -52,6 +52,10 @@
             <artifactId>commons-lang3</artifactId>
             <version>${commons.lang.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            </dependency>
     </dependencies>
 
     <modules>
