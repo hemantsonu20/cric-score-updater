@@ -14,8 +14,13 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.model;
+package com.github.cric.common.model;
 
-public class FullScore {
+
+/**
+ * @author heman
+ *
+ */
+public class SummaryScore {
 
 }

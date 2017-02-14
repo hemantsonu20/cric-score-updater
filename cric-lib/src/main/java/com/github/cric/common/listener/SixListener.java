@@ -1,3 +1,4 @@
+package com.github.cric.common.listener;
 /**
  *   Copyright 2017 Pratapi Hemant Patel
  *
@@ -14,16 +15,15 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.listener;
 
 
-/**
- * @author heman
- *
- */
-public interface MatchListener {
 
-    void matchStarted();
+public abstract class SixListener implements BoundryListener  {
+
     
-    void matchEnded();
+    @Override
+    public void fourRun() {
+    
+        throw new IllegalStateException("it's six listener only");
+    }
 }

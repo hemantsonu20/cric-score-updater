@@ -14,7 +14,7 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.listener;
+package com.github.cric.common.listener;
 
 public interface WicketListener {
 

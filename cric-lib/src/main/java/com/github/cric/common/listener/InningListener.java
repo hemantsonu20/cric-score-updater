@@ -14,16 +14,11 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.listener;
+package com.github.cric.common.listener;
 
+public interface InningListener {
 
-/**
- * @author heman
- *
- */
-public interface BoundryListener {
-
-    void fourRun();
+    void inningStarted();
     
-    void sixRun();
+    void inningEnded();
 }

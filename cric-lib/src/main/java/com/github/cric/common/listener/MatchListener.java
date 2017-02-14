@@ -14,9 +14,16 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.listener;
+package com.github.cric.common.listener;
 
-public interface OverListener {
 
-    void overEnded();
+/**
+ * @author heman
+ *
+ */
+public interface MatchListener {
+
+    void matchStarted();
+    
+    void matchEnded();
 }

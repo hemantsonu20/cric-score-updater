@@ -14,13 +14,20 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.model;
+package com.github.cric.common.model;
 
 
-/**
- * @author heman
- *
- */
-public class SummaryScore {
+public class Match {
 
+    private int matchId;
+
+    public int getMatchId() {
+
+        return matchId;
+    }
+
+    public void setMatchId(int matchId) {
+
+        this.matchId = matchId;
+    }
 }

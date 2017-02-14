@@ -1,4 +1,3 @@
-package com.github.cric.listener;
 /**
  *   Copyright 2017 Pratapi Hemant Patel
  *
@@ -15,15 +14,16 @@ package com.github.cric.listener;
  *   limitations under the License.
  *   
  */
+package com.github.cric.common.listener;
 
 
+/**
+ * @author heman
+ *
+ */
+public interface BoundryListener {
 
-public abstract class FourListener implements BoundryListener  {
-
+    void fourRun();
     
-    @Override
-    public void sixRun() {
-    
-        throw new IllegalStateException("it's four listener only");
-    }
+    void sixRun();
 }

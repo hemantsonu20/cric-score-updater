@@ -14,11 +14,9 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.listener;
+package com.github.cric.common.listener;
 
-public interface InningListener {
+public interface OverListener {
 
-    void inningStarted();
-    
-    void inningEnded();
+    void overEnded();
 }

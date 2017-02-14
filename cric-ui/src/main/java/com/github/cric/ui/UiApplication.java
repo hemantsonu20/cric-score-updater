@@ -14,24 +14,16 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.service;
+package com.github.cric.ui;
 
-import java.util.List;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.github.cric.model.BallByBallScore;
-import com.github.cric.model.FullScore;
-import com.github.cric.model.Match;
-import com.github.cric.model.SummaryScore;
+@SpringBootApplication
+public class UiApplication {
 
-public interface ScoreService {
+    public static void main(String[] args) {
 
-    List<Match> getCurrentMatches();
-    
-    List<Match> getCurrentMatches(String teamName); 
-    
-    SummaryScore getSummaryScore(int matchId);
-
-    FullScore getFullScore(int matchId);
-    
-    BallByBallScore getBallByBallScore(int matchId);
+        SpringApplication.run(UiApplication.class, args);
+    }
 }

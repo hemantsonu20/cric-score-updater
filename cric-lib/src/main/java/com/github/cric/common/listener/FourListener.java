@@ -1,3 +1,4 @@
+package com.github.cric.common.listener;
 /**
  *   Copyright 2017 Pratapi Hemant Patel
  *
@@ -14,11 +15,15 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.listener;
 
 
 
-public interface TossListener {
+public abstract class FourListener implements BoundryListener  {
 
-    void toss();
+    
+    @Override
+    public void sixRun() {
+    
+        throw new IllegalStateException("it's four listener only");
+    }
 }

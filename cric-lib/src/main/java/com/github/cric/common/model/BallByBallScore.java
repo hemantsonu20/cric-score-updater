@@ -14,20 +14,13 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.model;
+package com.github.cric.common.model;
 
 
-public class Match {
+/**
+ * @author heman
+ *
+ */
+public class BallByBallScore {
 
-    private int matchId;
-
-    public int getMatchId() {
-
-        return matchId;
-    }
-
-    public void setMatchId(int matchId) {
-
-        this.matchId = matchId;
-    }
 }
