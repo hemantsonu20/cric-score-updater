@@ -16,18 +16,54 @@
  */
 package com.github.cric.common.model;
 
-
 public class Match {
 
     private int matchId;
+    private boolean matchStarted;
+    private Team firstTeam;
+    private Team secondTeam;
 
     public int getMatchId() {
 
         return matchId;
     }
 
-    public void setMatchId(int matchId) {
+    public boolean isMatchStarted() {
+
+        return matchStarted;
+    }
+
+    public Team getFirstTeam() {
+
+        return firstTeam;
+    }
+
+    public Team getSecondTeam() {
+
+        return secondTeam;
+    }
+
+    public Match setMatchId(int matchId) {
 
         this.matchId = matchId;
+        return this;
+    }
+
+    public Match setMatchStarted(boolean matchStarted) {
+
+        this.matchStarted = matchStarted;
+        return this;
+    }
+
+    public Match setFirstTeam(Team firstTeam) {
+
+        this.firstTeam = firstTeam;
+        return this;
+    }
+
+    public Match setSecondTeam(Team secondTeam) {
+
+        this.secondTeam = secondTeam;
+        return this;
     }
 }
