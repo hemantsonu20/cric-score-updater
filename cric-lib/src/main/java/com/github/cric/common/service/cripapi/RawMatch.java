@@ -27,8 +27,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Raw match data as returned from cripapi
  * 
  */
-@JsonIgnoreProperties(value = { "squad" }, ignoreUnknown = true)
-class RawMatch {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class RawMatch {
 
     @JsonProperty("unique_id")
     private int matchId;

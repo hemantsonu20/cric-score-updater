@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.cric.common.exception.RemoteException;
 import com.github.cric.common.model.Match;
+import com.github.cric.common.model.SummaryScore;
 import com.github.cric.common.model.Team;
 
 @Service
@@ -45,17 +46,33 @@ class CripApiRemoteService {
         JsonNode matchesResponse = restTemplate.getForObject(urlConfig.getMatchesApi(), JsonNode.class);
 
         try {
-            List<RawMatch> rawMatches = mapper.readValue(fetchMatchesNode(matchesResponse),
+            List<RawMatch> rawMatches = mapper.readValue(
+                    fetchMatchesNode(matchesResponse),
                     new TypeReference<List<RawMatch>>() {
                     });
 
-            return rawMatches.stream().filter(this::filterUnknownTeam)
-                    .sorted((r1, r2) -> r1.getDate().compareTo(r2.getDate())).map(this::mapToMatch)
+            return rawMatches
+                    .stream()
+                    .filter(this::filterUnknownTeam)
+                    .sorted((r1, r2) -> r1.getDate().compareTo(r2.getDate()))
+                    .map(this::map)
                     .collect(Collectors.toList());
 
         } catch (IOException e) {
             throw new RemoteException(matchesResponse.toString(), e);
         }
+    }
+
+    /**
+     * Returns score of a given match id. Match id will remain unique, So its
+     * better to store it some where when you get it and use it in further
+     * request.
+     * 
+     */
+    SummaryScore getSummaryScore(int matchId) {
+
+        return map(restTemplate.getForObject(urlConfig.getScoreApi(), RawSummaryScore.class, matchId)).setMatchId(
+                matchId);
     }
 
     private String fetchMatchesNode(JsonNode matchesResponse) {
@@ -67,11 +84,24 @@ class CripApiRemoteService {
         throw new RemoteException(matchesResponse.toString());
     }
 
-    private Match mapToMatch(RawMatch rawMatch) {
+    private Match map(RawMatch raw) {
 
-        return new Match().setMatchId(rawMatch.getMatchId()).setMatchStarted(rawMatch.isMatchStarted())
-                .setFirstTeam(Team.fromName(rawMatch.getFirstTeam()))
-                .setSecondTeam(Team.fromName(rawMatch.getSecondTeam()));
+        return new Match()
+                .setMatchId(raw.getMatchId())
+                .setMatchStarted(raw.isMatchStarted())
+                .setFirstTeam(Team.fromName(raw.getFirstTeam()))
+                .setSecondTeam(Team.fromName(raw.getSecondTeam()));
+    }
+
+    private SummaryScore map(RawSummaryScore raw) {
+
+        return new SummaryScore()
+                .setMatchStarted(raw.isMatchStarted())
+                .setFirstTeam(Team.fromName(raw.getFirstTeam()))
+                .setSecondTeam(Team.fromName(raw.getSecondTeam()))
+                .setMatchType(raw.getMatchType())
+                .setScore(raw.getScore())
+                .setInningRequirement(raw.getInningRequirement());
     }
 
     /**

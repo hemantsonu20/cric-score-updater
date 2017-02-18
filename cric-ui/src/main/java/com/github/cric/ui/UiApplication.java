@@ -16,6 +16,8 @@
  */
 package com.github.cric.ui;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +25,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.github.cric.common.EnableCommonCricLib;
 import com.github.cric.common.EnableCricApiDotCom;
+import com.github.cric.common.model.Match;
+import com.github.cric.common.model.SummaryScore;
 import com.github.cric.common.service.ScoreService;
 
 @SpringBootApplication
@@ -37,11 +41,20 @@ public class UiApplication implements CommandLineRunner {
 
     @Autowired
     private ScoreService service;
-    
+
     @Override
     public void run(String... args) throws Exception {
 
-       System.out.println(service.getCurrentMatches("INDIA"));
-        
+        String s = service
+                .getCurrentMatches("INDIA")
+                .stream()
+                .mapToInt(Match::getMatchId)
+                .mapToObj(service::getSummaryScore)
+                .map(SummaryScore::toString)
+                .collect(Collectors.joining());
+
+        System.out.println(s);
     }
+    
+    
 }

@@ -45,7 +45,7 @@ public class CricApiScoreService implements ScoreService {
     @Override
     public SummaryScore getSummaryScore(int matchId) {
 
-        return null;
+        return remoteService.getSummaryScore(matchId);
     }
 
     @Override

@@ -11,7 +11,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum Team {
 
-    INDIA("IND", "INDIA"), AUSTRALIA("AUS", "AUSTRALIA");
+    IND("IND", "INDIA"), SL("SL", "SRI LANKA"), PAK("PAK", "PAKISTAN"), BAN("BAN", "BANGLADESH"), AUS("AUS",
+            "AUSTRALIA"), NZ("NZ", "NEW ZEALAND"), ZIM("ZIM", "ZIMBABWE"), ENG("ENG", "ENGLAND"), WI("WI",
+            "WEST INDIES"), SA("SA", "SOUTH AFRICA"), UNKNOWN("UNKNOWN", "UNKNOWN");
 
     private final String shortName;
     private final String fullName;
@@ -35,7 +37,13 @@ public enum Team {
     @JsonCreator
     public static Team fromName(String name) {
 
-        return LOOKUP_MAP.get(name.toUpperCase());
+        Team t = LOOKUP_MAP.get(name.toUpperCase());
+        if (null != t) {
+            return t;
+        }
+        else {
+            return UNKNOWN;
+        }
     }
 
     /**
