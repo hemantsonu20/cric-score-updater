@@ -16,8 +16,6 @@
  */
 package com.github.cric.ui;
 
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,8 +23,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.github.cric.common.EnableCommonCricLib;
 import com.github.cric.common.EnableCricApiDotCom;
-import com.github.cric.common.model.Match;
-import com.github.cric.common.model.SummaryScore;
+import com.github.cric.common.listener.CricContext;
 import com.github.cric.common.service.ScoreService;
 
 @SpringBootApplication
@@ -36,8 +33,11 @@ public class UiApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(UiApplication.class, args).close();
+        SpringApplication.run(UiApplication.class, args);
     }
+
+    @Autowired
+    private CricContext context;
 
     @Autowired
     private ScoreService service;
@@ -45,16 +45,8 @@ public class UiApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        String s = service
-                .getCurrentMatches("INDIA")
-                .stream()
-                .mapToInt(Match::getMatchId)
-                .mapToObj(service::getSummaryScore)
-                .map(SummaryScore::toString)
-                .collect(Collectors.joining());
+        //List<Match> m = service.getCurrentMatches("INDIA");
 
-        System.out.println(s);
+        context.registerSummaryScoreListener(s -> System.out.println(s.getSummaryScore().getScore()), 1003769, 10);
     }
-    
-    
 }
