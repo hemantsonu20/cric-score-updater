@@ -18,8 +18,6 @@ package com.github.cric.common.service;
 
 import java.util.List;
 
-import com.github.cric.common.model.BallByBallScore;
-import com.github.cric.common.model.FullScore;
 import com.github.cric.common.model.Match;
 import com.github.cric.common.model.SummaryScore;
 
@@ -28,8 +26,4 @@ public interface ScoreService {
     List<Match> getCurrentMatches(String teamName); 
     
     SummaryScore getSummaryScore(int matchId);
-
-    FullScore getFullScore(int matchId);
-    
-    BallByBallScore getBallByBallScore(int matchId);
 }

@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.cric.common.exception.CricException;
-import com.github.cric.common.model.BallByBallScore;
-import com.github.cric.common.model.FullScore;
 import com.github.cric.common.model.Match;
 import com.github.cric.common.model.SummaryScore;
 import com.github.cric.common.model.Team;
@@ -46,17 +44,5 @@ public class CricApiScoreService implements ScoreService {
     public SummaryScore getSummaryScore(int matchId) {
 
         return remoteService.getSummaryScore(matchId);
-    }
-
-    @Override
-    public FullScore getFullScore(int matchId) {
-
-        return null;
-    }
-
-    @Override
-    public BallByBallScore getBallByBallScore(int matchId) {
-
-        return null;
     }
 }

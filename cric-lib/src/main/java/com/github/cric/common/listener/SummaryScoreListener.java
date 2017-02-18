@@ -1,4 +1,3 @@
-package com.github.cric.common.listener;
 /**
  *   Copyright 2017 Pratapi Hemant Patel
  *
@@ -15,15 +14,16 @@ package com.github.cric.common.listener;
  *   limitations under the License.
  *   
  */
+package com.github.cric.common.listener;
 
+@FunctionalInterface
+public interface SummaryScoreListener {
 
-
-public abstract class SixListener implements BoundryListener  {
-
-    
-    @Override
-    public void fourRun() {
-    
-        throw new IllegalStateException("it's six listener only");
-    }
+    /**
+     * This method should not throw any exception, it will be caught and
+     * ignored.
+     * 
+     * @param scoreResponse
+     */
+    void updateSummaryScore(SummaryScoreResponse scoreResponse);
 }

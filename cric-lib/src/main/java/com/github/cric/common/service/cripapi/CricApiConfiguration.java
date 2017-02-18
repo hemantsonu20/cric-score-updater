@@ -18,6 +18,7 @@ package com.github.cric.common.service.cripapi;
 
 import java.net.URI;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +39,7 @@ import com.github.cric.common.config.CustomResponseErrorHandler;
 public class CricApiConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(CricApiConfiguration.class);
-    
+
     private static final String API_KEY = "apikey";
 
     @Value("${cric.api.key}")
@@ -49,15 +50,13 @@ public class CricApiConfiguration {
 
         RestTemplate template = new RestTemplate();
         template.setErrorHandler(new CustomResponseErrorHandler());
+        template.getInterceptors().add(outgoingCricApiRequestLoggerInterceptor());
         template.getInterceptors().add(outgoingCricApiRequestInterceptor());
         return template;
     }
 
     /**
      * This interceptor adds cric-api-key to all outgoing request.
-     * Additionally It logs request and response received from the cricapi.com
-     * 
-     * @return
      */
     private ClientHttpRequestInterceptor outgoingCricApiRequestInterceptor() {
 
@@ -71,11 +70,27 @@ public class CricApiConfiguration {
                     return UriComponentsBuilder.fromUri(super.getURI()).queryParam(API_KEY, apiKey).build().toUri();
                 }
             };
-            
+            return execution.execute(modified, body);
+        };
+    }
+
+    private ClientHttpRequestInterceptor outgoingCricApiRequestLoggerInterceptor() {
+
+        return (request, body, execution) -> {
+
             String requestUrl = request.getURI().toString();
             LOG.debug("sending request to {}", requestUrl);
-            ClientHttpResponse clientResponse = execution.execute(modified, body);
-            LOG.debug("response received from {} status {}", requestUrl, clientResponse.getStatusCode());
+            
+            StopWatch watch = new StopWatch();
+            watch.start();
+            ClientHttpResponse clientResponse = execution.execute(request, body);
+            watch.stop();
+            
+            LOG.debug(
+                    "response received from {} status {} time taken {}",
+                    requestUrl,
+                    clientResponse.getStatusCode(),
+                    watch.getTime());
             return clientResponse;
         };
     }
