@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,7 +18,7 @@ import com.github.cric.common.model.Match;
 import com.github.cric.common.model.Team;
 
 @Service
-@ConditionalOnBean(CricApiScoreService.class)
+@Lazy
 class CripApiRemoteService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CripApiRemoteService.class);
