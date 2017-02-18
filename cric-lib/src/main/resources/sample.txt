@@ -1,0 +1,20 @@
+/*****  match ended response *****/
+
+{
+  "provider": {
+    "source": "Various",
+    "url": "https://cricapi.com/",
+    "pubDate": "2017-02-18T09:01:13.999Z"
+  },
+  "ttl": 11,
+  "v": "1",
+  "cache": true,
+  "matchStarted": true,
+  "team-2": "West Zone",
+  "team-1": "East Zone",
+  "dateTimeGMT": "2017-02-18 04:00:00",
+  "type": "Twenty20",
+  "score": "East Zone 153/2 (13.4 ov, Virat Singh 58*, MK Tiwary 9*, SM Sanandia 0/26) - Match over",
+  "innings-requirement": "East Zone won by 8 wickets (with 38 balls remaining)",
+  "cache2": true
+}
