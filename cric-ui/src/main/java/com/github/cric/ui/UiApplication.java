@@ -16,14 +16,32 @@
  */
 package com.github.cric.ui;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.github.cric.common.EnableCommonCricLib;
+import com.github.cric.common.EnableCricApiDotCom;
+import com.github.cric.common.service.ScoreService;
+
 @SpringBootApplication
-public class UiApplication {
+@EnableCommonCricLib
+@EnableCricApiDotCom
+public class UiApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(UiApplication.class, args);
+        SpringApplication.run(UiApplication.class, args).close();
+    }
+
+    @Autowired
+    private ScoreService service;
+    
+    @Override
+    public void run(String... args) throws Exception {
+
+       System.out.println(service.getCurrentMatches("INDIA"));
+        
     }
 }

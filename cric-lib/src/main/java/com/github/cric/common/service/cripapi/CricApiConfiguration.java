@@ -18,33 +18,48 @@ package com.github.cric.common.service.cripapi;
 
 import java.net.URI;
 
-import org.springframework.beans.factory.InitializingBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.support.HttpRequestWrapper;
-import org.springframework.util.Assert;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@Configuration
-@ConditionalOnProperty(value = "cric.api.enabled", havingValue = "true")
-public class CricApiConfiguration implements InitializingBean {
+import com.github.cric.common.config.CustomResponseErrorHandler;
 
+@Configuration
+@ComponentScan(basePackageClasses = CricApiConfiguration.class)
+public class CricApiConfiguration {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CricApiConfiguration.class);
+    
     private static final String API_KEY = "apikey";
 
-    @Value("cric.api.key")
+    @Value("${cric.api.key}")
     private String apiKey;
 
+    @Bean
+    public RestTemplate cricApiRestTemplate() {
+
+        RestTemplate template = new RestTemplate();
+        template.setErrorHandler(new CustomResponseErrorHandler());
+        template.getInterceptors().add(outgoingCricApiRequestInterceptor());
+        return template;
+    }
+
     /**
-     * This interceptor adds cric-api-key to all outgoing request
+     * This interceptor adds cric-api-key to all outgoing request.
+     * Additionally It logs request and response received from the cricapi.com
      * 
      * @return
      */
-    @Bean
-    public ClientHttpRequestInterceptor outgoingCricApiRequestInterceptor() {
+    private ClientHttpRequestInterceptor outgoingCricApiRequestInterceptor() {
 
         return (request, body, execution) -> {
 
@@ -56,13 +71,12 @@ public class CricApiConfiguration implements InitializingBean {
                     return UriComponentsBuilder.fromUri(super.getURI()).queryParam(API_KEY, apiKey).build().toUri();
                 }
             };
-            return execution.execute(modified, body);
+            
+            String requestUrl = request.getURI().toString();
+            LOG.debug("sending request to {}", requestUrl);
+            ClientHttpResponse clientResponse = execution.execute(modified, body);
+            LOG.debug("response received from {} status {}", requestUrl, clientResponse.getStatusCode());
+            return clientResponse;
         };
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-
-        Assert.notNull(apiKey, "define an env \"cric.api.key\"={cric api key}");
     }
 }

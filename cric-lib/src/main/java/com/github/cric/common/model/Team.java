@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
@@ -16,6 +17,7 @@ public enum Team {
     private final String fullName;
 
     private Team(String shortName, String fullName) {
+
         this.shortName = shortName;
         this.fullName = fullName;
     }
@@ -33,7 +35,7 @@ public enum Team {
     @JsonCreator
     public static Team fromName(String name) {
 
-        return LOOKUP_MAP.get(name);
+        return LOOKUP_MAP.get(name.toUpperCase());
     }
 
     /**
@@ -51,6 +53,6 @@ public enum Team {
     @Override
     public String toString() {
 
-        return new ToStringBuilder(this).append(shortName).append(fullName).build();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append(shortName).append(fullName).build();
     }
 }

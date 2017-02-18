@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import com.github.cric.common.exception.CricException;
@@ -16,7 +15,6 @@ import com.github.cric.common.model.Team;
 import com.github.cric.common.service.ScoreService;
 
 @Service
-@ConditionalOnProperty(value = "cric.api.enabled", havingValue = "true")
 public class CricApiScoreService implements ScoreService {
 
     private final CripApiRemoteService remoteService;

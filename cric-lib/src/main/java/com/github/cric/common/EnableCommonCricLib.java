@@ -14,11 +14,27 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.common.config;
+package com.github.cric.common;
 
-import org.springframework.context.annotation.Configuration;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Configuration
-public class CommonConfig {
+import org.springframework.context.annotation.Import;
+
+import com.github.cric.common.config.CommonConfig;
+
+/**
+ * Annotation to be added on a SpringBootApplication class. It will configure all
+ * the required classes automatically.
+ * 
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Import(CommonConfig.class)
+public @interface EnableCommonCricLib {
 
 }

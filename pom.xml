@@ -53,13 +53,18 @@
             <version>${commons.lang.version}</version>
         </dependency>
         <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            </dependency>
+            <artifactId>jackson-datatype-joda</artifactId>
+        </dependency>
     </dependencies>
 
     <modules>
-        <module>cric-lib</module>
+        <module>common-cric-lib</module>
         <module>cric-ui</module>
     </modules>
 

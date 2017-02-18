@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>com.github.hemantsonu20</groupId>
-            <artifactId>cric-lib</artifactId>
+            <artifactId>common-cric-lib</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>

@@ -16,9 +16,9 @@
  */
 package com.github.cric.common.service.cripapi;
 
-import java.time.ZonedDateTime;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -43,7 +43,7 @@ class RawMatch {
     private String secondTeam;
 
     @JsonProperty("date")
-    private ZonedDateTime date;
+    private DateTime date;
 
     public int getMatchId() {
 
@@ -65,7 +65,7 @@ class RawMatch {
         return secondTeam;
     }
 
-    public ZonedDateTime getDate() {
+    public DateTime getDate() {
 
         return date;
     }
@@ -94,7 +94,7 @@ class RawMatch {
         return this;
     }
 
-    public RawMatch setDate(ZonedDateTime date) {
+    public RawMatch setDate(DateTime date) {
 
         this.date = date;
         return this;
@@ -103,12 +103,12 @@ class RawMatch {
     @Override
     public String toString() {
 
-        return new ToStringBuilder(this)
-        .append(matchId)
-        .append(matchStarted)
-        .append(firstTeam)
-        .append(secondTeam)
-        .append(date)
-        .build();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("matchId", matchId)
+                .append("matchStarted", matchStarted)
+                .append("firstTeam", firstTeam)
+                .append("secondTeam", secondTeam)
+                .append("date", date)
+                .build();
     }
 }

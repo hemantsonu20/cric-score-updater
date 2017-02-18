@@ -17,6 +17,7 @@
 package com.github.cric.common.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Match {
 
@@ -72,11 +73,11 @@ public class Match {
     @Override
     public String toString() {
 
-        return new ToStringBuilder(this)
-        .append(matchId)
-        .append(matchStarted)
-        .append(firstTeam)
-        .append(secondTeam)
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+        .append("matchId", matchId)
+        .append("matchStarted", matchStarted)
+        .append("firstTeam", firstTeam)
+        .append("secondTeam", secondTeam)
         .build();
     }
 }

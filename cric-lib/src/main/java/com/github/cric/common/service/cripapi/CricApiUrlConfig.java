@@ -18,24 +18,22 @@ package com.github.cric.common.service.cripapi;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@Lazy
 @PropertySource("classpath:cricapi.properties")
-public class CricApiUrlConfig {
+class CricApiUrlConfig {
 
-    @Value("services.cricapi.url.base")
+    @Value("${services.cricapi.url.base}")
     private String baseUrl;
 
-    @Value("services.cricapi.uri.matches")
+    @Value("${services.cricapi.uri.matches}")
     private String matchesUri;
 
-    @Value("services.cricapi.uri.score")
+    @Value("${services.cricapi.uri.score}")
     private String scoreUri;
 
-    @Value("services.cricapi.uri.ballbyball")
+    @Value("${services.cricapi.uri.ballbyball}")
     private String ballByBallUri;
 
     public String getMatchesApi() {
