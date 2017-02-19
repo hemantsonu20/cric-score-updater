@@ -16,7 +16,7 @@
  */
 package com.github.cric.ui;
 
-import java.util.concurrent.CountDownLatch;
+import javax.swing.SwingUtilities;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -25,67 +25,40 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 
 import com.github.cric.common.EnableCommonCricLib;
 import com.github.cric.common.EnableCricApiDotCom;
-import com.github.cric.common.listener.CricContext;
-import com.github.cric.common.listener.SummaryScoreResponse;
-import com.github.cric.common.service.ScoreService;
 
 @SpringBootApplication
 @EnableCommonCricLib
 @EnableCricApiDotCom
 public class UiApplication implements CommandLineRunner {
 
+    public static final int DEFAULT_POPUP_FREQUENCY = 20;
+    public static final int DEFAULT_POPUP_TIME = 10;
+
     public static void main(String[] args) {
 
         new SpringApplicationBuilder(UiApplication.class).headless(false).web(false).run(args);
     }
 
-    private static final int DEFAULT_POPUP_TIME = 10;
-    
     @Autowired
-    private CricContext context;
+    private MainLock mainLock;
 
     @Autowired
-    private ScoreService service;
-
-    @Autowired
-    private NotificationWindow popup;
-    
-    private CountDownLatch latch = new CountDownLatch(1);
-    
-    // msgs to display
-    private String heading;
-    private String msg;
+    private ContextService service;
 
     @Override
     public void run(String... args) throws Exception {
 
         // List<Match> m = service.getCurrentMatches("INDIA");
 
-        popup.showMsg("heading", "first");
-        context.registerSummaryScoreListener(this::consume, 1003769, 20);
-        
-        while(true) {
-            
-            latch.await();
-            System.out.println(msg);
-            popup.showMsg(heading, msg);
-            latch = new CountDownLatch(1);
-            Thread.sleep(DEFAULT_POPUP_TIME * 1000);
-            popup.setVisible(false);
-        }
-    }
-    
+        SettingFrame settingsFrame = new SettingFrame(mainLock);
+        SwingUtilities.invokeLater(() -> settingsFrame.setVisible(true));
 
-    private void consume(SummaryScoreResponse s) {
-        
-        if(s.hasError()) {
-            this.heading = "Error";
-            this.msg =s.getError().getMessage();
+        // wait for settings from the frame
+        mainLock.lock();
+        if (settingsFrame.hasUpdatedSettings()) {
+            service.schedulePopup(settingsFrame.getSettings());
         }
-        else {
-            this.heading = "heading";
-            this.msg = s.getSummaryScore().getScore();;
-        }
-        latch.countDown();
     }
 }
+// logging in file
+// task bar icon, jar icon

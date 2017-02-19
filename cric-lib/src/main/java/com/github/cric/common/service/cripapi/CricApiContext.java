@@ -36,10 +36,12 @@ import com.github.cric.common.service.ScoreService;
 @Component
 public class CricApiContext implements CricContext, DisposableBean {
 
+    public static final int DEFAULT_INITIAL_POPUP_DELAY = 10;
+    
     private static final Map<SummaryScoreListener, ScheduledFuture<?>> FUTURE = new HashMap<>();
     private static final ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(1);
 
-    private static final int DEFAULT_INITIAL_DELAY = 10;
+    
 
     @Autowired
     private ScoreService scoreService;
@@ -55,7 +57,7 @@ public class CricApiContext implements CricContext, DisposableBean {
         Objects.requireNonNull(s);
         ScheduledFuture<?> f = EXECUTOR.scheduleWithFixedDelay(
                 getTask(s, matchId),
-                DEFAULT_INITIAL_DELAY,
+                DEFAULT_INITIAL_POPUP_DELAY,
                 seconds,
                 TimeUnit.SECONDS);
         FUTURE.put(s, f);
@@ -64,6 +66,10 @@ public class CricApiContext implements CricContext, DisposableBean {
     @Override
     public void unregisterSummaryScoreListener(SummaryScoreListener s) {
 
+        if(null == s) {
+            return;
+        }
+        
         ScheduledFuture<?> f = FUTURE.get(s);
         if (null != f) {
             f.cancel(true);

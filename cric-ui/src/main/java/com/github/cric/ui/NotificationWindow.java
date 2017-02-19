@@ -16,10 +16,11 @@
  */
 package com.github.cric.ui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsDevice.WindowTranslucency;
 import java.awt.GraphicsEnvironment;
-import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -35,7 +36,10 @@ public class NotificationWindow extends JDialog {
 
     private static final long serialVersionUID = 1L;
 
-    private final JLabel messageLabel = new JLabel("gdfgfdhfhfhfghfhfhfhf");
+    private static final String HTML_FORMAT = "<html>%s</html>";
+
+    private final JLabel messageLabel = new JLabel("(00.0 ov, xxxxx 00, xxxxx 00)");
+    private final JLabel requirementLabel = new JLabel("000 run required to win");
 
     private final GraphicsDevice graphicsDevice = GraphicsEnvironment
             .getLocalGraphicsEnvironment()
@@ -48,40 +52,41 @@ public class NotificationWindow extends JDialog {
     public NotificationWindow() {
 
         super();
-        setLayout(new GridBagLayout());
-        setSize(300, 100);
+        setLayout(new BorderLayout());
+        setSize(400, 110);
         setLocationRelativeTo(null);
         if (isTranslucencySupported()) {
             setOpacity(0.80f);
         }
         setAlwaysOnTop(true);
         setResizable(false);
-        add(messageLabel);
+        
+        add(messageLabel, BorderLayout.NORTH);
+        add(requirementLabel, BorderLayout.CENTER);
+        messageLabel.setForeground(Color.DARK_GRAY);
+        requirementLabel.setForeground(Color.DARK_GRAY);
+        
+        setLocationAtRightBottom();
     }
 
-    public void showMsg(String heading, String message) {
+    public void showMsg(PopupMessage popupMessage) {
 
-        setMessage(heading, message);
+        setMessage(popupMessage);
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-
-                Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(
-                        NotificationWindow.this.getGraphicsConfiguration());
-                int taskBarSize = scnMax.bottom;
-                Rectangle rect = graphicsDevice.getDefaultConfiguration().getBounds();
-                int x = (int) rect.getMaxX() - NotificationWindow.this.getWidth();
-                int y = (int) rect.getMaxY() - NotificationWindow.this.getHeight() - taskBarSize;
-                NotificationWindow.this.setLocation(x, y);
                 NotificationWindow.this.setVisible(true);
             }
         });
     }
 
-    private void setMessage(String heading, String message) {
+    private void setMessage(PopupMessage popupMessage) {
 
-        messageLabel.setText(String.format("<html>%s %s</html>", heading, message));
+        System.out.println(popupMessage);
+        setTitle(popupMessage.getHeading());
+        messageLabel.setText(String.format(HTML_FORMAT, popupMessage.getMessage()));
+        requirementLabel.setText(String.format(HTML_FORMAT, popupMessage.getRequirement()));
     }
 
     private boolean isTranslucencySupported() {
@@ -90,5 +95,16 @@ public class NotificationWindow extends JDialog {
         GraphicsDevice graphicsDevice = graphicsEnvironment.getDefaultScreenDevice();
 
         return graphicsDevice.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT);
+    }
+    
+    private void setLocationAtRightBottom() {
+
+        Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets(
+                NotificationWindow.this.getGraphicsConfiguration());
+        int taskBarSize = scnMax.bottom;
+        Rectangle rect = graphicsDevice.getDefaultConfiguration().getBounds();
+        int x = (int) rect.getMaxX() - NotificationWindow.this.getWidth();
+        int y = (int) rect.getMaxY() - NotificationWindow.this.getHeight() - taskBarSize;
+        this.setLocation(x, y);
     }
 }
