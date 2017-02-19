@@ -23,7 +23,7 @@ import com.github.cric.common.model.SummaryScore;
 
 public interface ScoreService {
 
-    List<Match> getCurrentMatches(String teamName); 
+    List<Match> getCurrentMatches();
     
     SummaryScore getSummaryScore(int matchId);
 }

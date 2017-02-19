@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -20,8 +18,6 @@ import com.github.cric.common.model.Team;
 
 @Service
 class CripApiRemoteService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(CripApiRemoteService.class);
 
     private final RestTemplate restTemplate;
     private final CricApiUrlConfig urlConfig;
@@ -53,7 +49,7 @@ class CripApiRemoteService {
 
             return rawMatches
                     .stream()
-                    .filter(this::filterUnknownTeam)
+                    .filter(RawMatch::isMatchStarted)
                     .sorted((r1, r2) -> r1.getDate().compareTo(r2.getDate()))
                     .map(this::map)
                     .collect(Collectors.toList());
@@ -102,28 +98,5 @@ class CripApiRemoteService {
                 .setMatchType(raw.getMatchType())
                 .setScore(raw.getScore())
                 .setInningRequirement(raw.getInningRequirement());
-    }
-
-    /**
-     * Method to filter unknown team names. Only recognized team names are in
-     * {@link Team} enum.
-     * 
-     * @param rawMatch
-     * @return
-     */
-    private boolean filterUnknownTeam(RawMatch rawMatch) {
-
-        if (Team.fromName(rawMatch.getFirstTeam()) == null) {
-
-            LOG.debug("unknown team name found {}", rawMatch.getFirstTeam());
-            return false;
-        }
-
-        if (Team.fromName(rawMatch.getSecondTeam()) == null) {
-
-            LOG.debug("unknown team name found {}", rawMatch.getSecondTeam());
-            return false;
-        }
-        return true;
     }
 }
