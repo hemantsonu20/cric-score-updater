@@ -14,18 +14,17 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.ui;
-
-import javax.swing.Timer;
+package com.github.cric.app.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.github.cric.app.model.PopupMessage;
+import com.github.cric.app.model.Settings;
+import com.github.cric.app.ui.NotificationWindow;
 import com.github.cric.common.listener.CricContext;
-import com.github.cric.common.listener.SummaryScoreListener;
 import com.github.cric.common.listener.SummaryScoreResponse;
 import com.github.cric.common.model.SummaryScore;
-import com.github.cric.common.service.ScoreService;
 
 /**
  * @author heman

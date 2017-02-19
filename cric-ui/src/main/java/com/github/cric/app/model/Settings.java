@@ -14,7 +14,9 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.ui;
+package com.github.cric.app.model;
+
+import com.github.cric.app.UiApplication;
 
 /**
  * @author heman

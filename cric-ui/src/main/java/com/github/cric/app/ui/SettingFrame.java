@@ -14,12 +14,15 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.ui;
+package com.github.cric.app.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
 
 import javax.swing.JFrame;
+
+import com.github.cric.app.model.Settings;
+import com.github.cric.app.service.MainLock;
 
 public class SettingFrame extends JFrame {
 

@@ -14,7 +14,7 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.ui;
+package com.github.cric.app;
 
 import javax.swing.SwingUtilities;
 
@@ -23,6 +23,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
+import com.github.cric.app.service.ContextService;
+import com.github.cric.app.service.MainLock;
+import com.github.cric.app.ui.SettingFrame;
 import com.github.cric.common.EnableCommonCricLib;
 import com.github.cric.common.EnableCricApiDotCom;
 

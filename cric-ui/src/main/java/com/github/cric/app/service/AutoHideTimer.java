@@ -14,7 +14,7 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.ui;
+package com.github.cric.app.service;
 
 import javax.swing.JDialog;
 import javax.swing.Timer;

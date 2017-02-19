@@ -14,7 +14,7 @@
  *   limitations under the License.
  *   
  */
-package com.github.cric.ui;
+package com.github.cric.app.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -30,6 +30,8 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import org.springframework.stereotype.Component;
+
+import com.github.cric.app.model.PopupMessage;
 
 @Component
 public class NotificationWindow extends JDialog {
