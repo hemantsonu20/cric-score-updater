@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +21,8 @@ import com.github.cric.common.model.Team;
 @Service
 class CripApiRemoteService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CripApiRemoteService.class);
+    
     private final RestTemplate restTemplate;
     private final CricApiUrlConfig urlConfig;
     private final ObjectMapper mapper;
@@ -40,7 +44,8 @@ class CripApiRemoteService {
     List<Match> getCurrentMatches() {
 
         JsonNode matchesResponse = restTemplate.getForObject(urlConfig.getMatchesApi(), JsonNode.class);
-
+        LOG.debug("getCurrentMatches response {}", matchesResponse);
+        
         try {
             List<RawMatch> rawMatches = mapper.readValue(
                     fetchMatchesNode(matchesResponse),
@@ -55,6 +60,7 @@ class CripApiRemoteService {
                     .collect(Collectors.toList());
 
         } catch (IOException e) {
+            LOG.warn("getCurrentMatches", e);
             throw new RemoteException(matchesResponse.toString(), e);
         }
     }
@@ -67,7 +73,10 @@ class CripApiRemoteService {
      */
     SummaryScore getSummaryScore(int matchId) {
 
-        return map(restTemplate.getForObject(urlConfig.getScoreApi(), RawSummaryScore.class, matchId)).setMatchId(
+        
+        RawSummaryScore score = restTemplate.getForObject(urlConfig.getScoreApi(), RawSummaryScore.class, matchId);
+        LOG.debug("getSummaryScore response {}", score);
+        return map(score).setMatchId(
                 matchId);
     }
 

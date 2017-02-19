@@ -28,6 +28,7 @@ import com.github.cric.app.service.MainLock;
 import com.github.cric.app.ui.SettingFrame;
 import com.github.cric.common.EnableCommonCricLib;
 import com.github.cric.common.EnableCricApiDotCom;
+import com.github.cric.common.service.ScoreService;
 
 @SpringBootApplication
 @EnableCommonCricLib
@@ -46,22 +47,30 @@ public class UiApplication implements CommandLineRunner {
     private MainLock mainLock;
 
     @Autowired
-    private ContextService service;
+    private ContextService contextService;
+    
+    @Autowired
+    private ScoreService scoreService;
 
     @Override
     public void run(String... args) throws Exception {
 
         // List<Match> m = service.getCurrentMatches("INDIA");
 
-        SettingFrame settingsFrame = new SettingFrame(mainLock);
+        SettingFrame settingsFrame = new SettingFrame(scoreService, mainLock);
         SwingUtilities.invokeLater(() -> settingsFrame.setVisible(true));
 
         // wait for settings from the frame
         mainLock.lock();
         if (settingsFrame.hasUpdatedSettings()) {
-            service.schedulePopup(settingsFrame.getSettings());
+            contextService.schedulePopup(settingsFrame.getSettings());
         }
     }
 }
 // logging in file
 // task bar icon, jar icon
+// number only entry in > 0 in setting panel
+// validation if empty fields
+// store current values from file
+// Help menu
+// alignment of msglabel

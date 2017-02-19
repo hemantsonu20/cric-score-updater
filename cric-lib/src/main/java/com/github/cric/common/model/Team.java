@@ -5,6 +5,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -75,7 +76,7 @@ public class Team {
             return shortName;
         }
         else {
-            return rawName;
+            return StringUtils.abbreviate(rawName, 15) ;
         }
     }
 
@@ -98,7 +99,8 @@ public class Team {
     private static Map<String, Team> LOOKUP_MAP = new HashMap<>();
     static {
         for (Field f : Team.class.getDeclaredFields()) {
-            if (f.getClass().equals(Team.class) && Modifier.isStatic(f.getModifiers())) {
+            
+            if (f.getType().equals(Team.class) && Modifier.isStatic(f.getModifiers())) {
 
                 try {
                     Team t = (Team) f.get(null);

@@ -85,7 +85,6 @@ public class NotificationWindow extends JDialog {
 
     private void setMessage(PopupMessage popupMessage) {
 
-        System.out.println(popupMessage);
         setTitle(popupMessage.getHeading());
         messageLabel.setText(String.format(HTML_FORMAT, popupMessage.getMessage()));
         requirementLabel.setText(String.format(HTML_FORMAT, popupMessage.getRequirement()));

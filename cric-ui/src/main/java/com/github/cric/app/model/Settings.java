@@ -16,7 +16,6 @@
  */
 package com.github.cric.app.model;
 
-import com.github.cric.app.UiApplication;
 
 /**
  * @author heman
@@ -24,9 +23,15 @@ import com.github.cric.app.UiApplication;
  */
 public class Settings {
 
-    private int matchId;
-    private int popupTime = UiApplication.DEFAULT_POPUP_TIME;
-    private int popupFrequency = UiApplication.DEFAULT_POPUP_FREQUENCY;
+    private final int matchId;
+    private final int popupTime;
+    private final int popupFrequency;
+    
+    public Settings(int matchId, int popupTime, int popupFrequency) {
+        this.matchId = matchId;
+        this.popupTime = popupTime;
+        this.popupFrequency = popupFrequency;
+    }
 
     public int getMatchId() {
 
@@ -41,23 +46,5 @@ public class Settings {
     public int getPopupFrequency() {
 
         return popupFrequency;
-    }
-
-    public Settings setMatchId(int matchId) {
-
-        this.matchId = matchId;
-        return this;
-    }
-
-    public Settings setPopupTime(int popupTime) {
-
-        this.popupTime = popupTime;
-        return this;
-    }
-
-    public Settings setPopupFrequency(int popupFrequency) {
-
-        this.popupFrequency = popupFrequency;
-        return this;
     }
 }

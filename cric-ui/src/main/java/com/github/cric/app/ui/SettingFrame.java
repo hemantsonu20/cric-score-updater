@@ -17,44 +17,40 @@
 package com.github.cric.app.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
+import java.util.List;
 
 import javax.swing.JFrame;
 
 import com.github.cric.app.model.Settings;
 import com.github.cric.app.service.MainLock;
+import com.github.cric.common.model.Match;
+import com.github.cric.common.service.ScoreService;
 
 public class SettingFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
+    private Settings settings;
     private MainLock mainLock;
 
-    private Settings settings = new Settings().setMatchId(1001351);
-
-    public SettingFrame(MainLock mainLock) {
+    public SettingFrame(ScoreService scoreService, MainLock mainLock) {
 
         super();
+        this.mainLock = mainLock;
+        
         setLayout(new BorderLayout());
-        setSize(400, 110);
         setLocationRelativeTo(null);
         setAlwaysOnTop(true);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        Button b = new Button("Start");
-        b.addActionListener(e -> {
-            this.submitted();
-            b.setEnabled(false);
-        });
-        add(b);
-
-        this.mainLock = mainLock;
+        add(new SettingPanel(this, scoreService));
+        pack();
     }
 
-    private void submitted() {
+    void submitted(Settings settings) {
 
         this.setExtendedState(ICONIFIED);
+        this.settings = settings;
         mainLock.unlock();
     }
 

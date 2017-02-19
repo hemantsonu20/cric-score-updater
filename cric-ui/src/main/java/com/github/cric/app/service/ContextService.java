@@ -16,6 +16,8 @@
  */
 package com.github.cric.app.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +35,8 @@ import com.github.cric.common.model.SummaryScore;
 @Component
 public class ContextService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ContextService.class);
+    
     // msgs to display
     private PopupMessage popupMessage = new PopupMessage();
 
@@ -64,13 +68,14 @@ public class ContextService {
 
     private void consume(SummaryScoreResponse s) {
 
-        System.out.println("in consume");
         if (s.hasError()) {
             popupMessage.setHeading("Error").setMessage(s.getError().getMessage()).setRequirement("");
+            LOG.warn("error", s.getError());
         }
         else {
             parseScore(s.getSummaryScore());
         }
+        LOG.debug("showing popup {}", popupMessage);
         lock.unlock();
     }
 
@@ -96,8 +101,8 @@ public class ContextService {
                         String.format(
                                 "%s (%s V %s)",
                                 headingPart,
-                                summaryScore.getFirstTeam().getShortName(),
-                                summaryScore.getSecondTeam().getShortName()))
+                                summaryScore.getFirstTeam().getDisplayName(),
+                                summaryScore.getSecondTeam().getDisplayName()))
                 .setMessage(msgPart)
                 .setRequirement(summaryScore.getInningRequirement());
     }
