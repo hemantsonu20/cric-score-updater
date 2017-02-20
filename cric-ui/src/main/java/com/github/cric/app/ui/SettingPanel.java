@@ -58,7 +58,7 @@ public class SettingPanel extends JPanel {
     private ScoreService scoreService;
 
     private JComboBox<String> matchesCombo = new JComboBox<>();
-    private JTextField apiKeyField = textField("api key");
+    private JTextField apiKeyField = textField("DjzldW0zisZt3GWyRiiCjD7QAd72");
     private JTextField popupTimeField = textField(Integer.toString(UiApplication.DEFAULT_POPUP_TIME));
     private JTextField popupFreuencyField = textField(Integer.toString(UiApplication.DEFAULT_POPUP_FREQUENCY));
     private JButton submitButton;
