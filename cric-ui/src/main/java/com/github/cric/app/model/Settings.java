@@ -18,22 +18,32 @@ package com.github.cric.app.model;
 
 import java.io.Serializable;
 
-/**
- * @author heman
- *
- */
-public class Settings implements Serializable {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+
+public final class Settings implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     private final int matchId;
     private final int popupTime;
     private final int popupFrequency;
-    
+    private final String apiKey;
+
     public Settings(int matchId, int popupTime, int popupFrequency) {
+
+        this(matchId, popupTime, popupFrequency, null);
+    }
+
+    @JsonCreator
+    public Settings(@JsonProperty("matchId") int matchId, @JsonProperty("popupTime") int popupTime,
+            @JsonProperty("popupFrequency") int popupFrequency, @JsonProperty("apiKey") String apiKey) {
+
         this.matchId = matchId;
         this.popupTime = popupTime;
         this.popupFrequency = popupFrequency;
+        this.apiKey = apiKey;
     }
 
     public int getMatchId() {
@@ -49,5 +59,10 @@ public class Settings implements Serializable {
     public int getPopupFrequency() {
 
         return popupFrequency;
+    }
+
+    public String getApiKey() {
+
+        return apiKey;
     }
 }

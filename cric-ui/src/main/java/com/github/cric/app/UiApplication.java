@@ -35,8 +35,8 @@ import com.github.cric.common.service.ScoreService;
 @EnableCricApiDotCom
 public class UiApplication implements CommandLineRunner {
 
-    public static final int DEFAULT_POPUP_FREQUENCY = 20;
     public static final int DEFAULT_POPUP_TIME = 10;
+    public static final int DEFAULT_POPUP_FREQUENCY = 20;
 
     @Autowired
     private MainLock mainLock;
@@ -66,6 +66,5 @@ public class UiApplication implements CommandLineRunner {
     }
 }
 // logging in file
-// task bar icon, jar icon
-// store current values from file
 // Help menu
+// default time and freq 5 and 30

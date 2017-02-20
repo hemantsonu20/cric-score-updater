@@ -36,12 +36,14 @@ public class SettingFrame extends JFrame {
         super();
         this.mainLock = mainLock;
         
+        setTitle("Cric Score Updater");
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         add(new SettingPanel(this, scoreService));
         pack();
+        requestFocus();
     }
 
     void submitted(Settings settings) {

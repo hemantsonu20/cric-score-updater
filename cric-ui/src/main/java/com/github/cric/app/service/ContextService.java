@@ -62,7 +62,7 @@ public class ContextService {
 
             lock.lock();
             popup.showMsg(popupMessage);
-            // timer.start();
+            timer.start();
         }
     }
 
