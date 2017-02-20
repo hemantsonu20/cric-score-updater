@@ -65,3 +65,5 @@ public class UiApplication implements CommandLineRunner {
 }
 // logging in file
 // default time and freq 5 and 30
+// read me update
+// travis ci
