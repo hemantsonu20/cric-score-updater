@@ -16,6 +16,7 @@
  */
 package com.github.cric.app.service;
 
+import java.io.Serializable;
 import java.util.concurrent.CountDownLatch;
 
 import org.springframework.context.annotation.Scope;
@@ -27,8 +28,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("prototype")
-public class MainLock {
+public class MainLock implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     // thread to wait for new updates available
     private CountDownLatch latch;
 
