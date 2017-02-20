@@ -38,7 +38,6 @@ public class SettingFrame extends JFrame {
         
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
-        setAlwaysOnTop(true);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         add(new SettingPanel(this, scoreService));
@@ -59,7 +58,7 @@ public class SettingFrame extends JFrame {
 
     public boolean hasUpdatedSettings() {
 
-        return (settings != null);
+        return settings != null;
     }
 
     static {

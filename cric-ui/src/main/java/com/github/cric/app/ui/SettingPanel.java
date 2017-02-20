@@ -43,15 +43,13 @@ import com.github.cric.common.service.cripapi.CricApiConfiguration;
 public class SettingPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(SettingPanel.class);
-    
+
     private static final int MARGIN = 10;
     private static final int GAP = 5;
-    
-    private static final String MATCH_FORMAT = "%s V %s";
 
-    
+    private static final String MATCH_FORMAT = "%s V %s";
 
     private SettingFrame parentFrame;
     private List<Match> matchList;
@@ -62,7 +60,7 @@ public class SettingPanel extends JPanel {
     private JTextField popupTimeField = textField(Integer.toString(UiApplication.DEFAULT_POPUP_TIME));
     private JTextField popupFreuencyField = textField(Integer.toString(UiApplication.DEFAULT_POPUP_FREQUENCY));
     private JButton submitButton;
-    
+
     private JLabel msgLabel = new JLabel("enter api key provided by cricapi.com");
 
     public SettingPanel(SettingFrame parent, ScoreService scoreService) {
@@ -80,7 +78,7 @@ public class SettingPanel extends JPanel {
         formPanel.add(label("Api Key", "get api key from cricapi.com"));
         apiKeyField.setColumns(18);
         formPanel.add(apiKeyField);
-        
+
         formPanel.add(label("Popup Time (sec)", "popup disappears after this time"));
         formPanel.add(popupTimeField);
 
@@ -89,14 +87,14 @@ public class SettingPanel extends JPanel {
 
         JPanel submitPanel = new JPanel();
         submitPanel.add(submitButton);
-        
+
         setLayout(new BorderLayout(GAP, GAP));
         setBorder(new EmptyBorder(MARGIN, MARGIN, MARGIN, MARGIN));
-        
+
         add(formPanel, BorderLayout.NORTH);
         add(submitPanel, BorderLayout.CENTER);
         setAllEnabled(false);
-        
+
         msgLabel.setForeground(Color.MAGENTA);
         msgLabel.setHorizontalAlignment(JLabel.CENTER);
         add(msgLabel, BorderLayout.SOUTH);
@@ -110,21 +108,20 @@ public class SettingPanel extends JPanel {
     private void submitted() {
 
         int selected = matchesCombo.getSelectedIndex();
-        
-        if(selected >= 0) {
+
+        if (selected >= 0) {
             int matchId = matchList.get(selected).getMatchId();
             int popupTime = Integer.parseInt(popupTimeField.getText());
             int popupFrequency = Integer.parseInt(popupFreuencyField.getText());
             parentFrame.submitted(new Settings(matchId, popupTime, popupFrequency));
             setMessage("notification scheduled, close this window to stop");
-            
+
             setAllEnabled(false);
             submitButton.setEnabled(false);
-        }
-        else {
+        } else {
             setMessage("no matches selected");
         }
-        LOG.debug("current selected index in conbo {}", selected);
+        LOG.debug("current selected index in combo {}", selected);
     }
 
     private JTextField textField(String defaultValue) {
@@ -157,74 +154,69 @@ public class SettingPanel extends JPanel {
 
     private JButton submitButton() {
 
-        JButton b = new JButton("Schedule");
-        b.setToolTipText("Schedule for score update");
+        JButton b = new JButton("Submit");
+        b.setToolTipText("Schedule for score updates via popup");
         parentFrame.getRootPane().setDefaultButton(b);
         b.addActionListener(e -> {
-            
-            
-            
-            if(!validatedInputFields()) {
+
+            if (!validatedInputFields()) {
                 return;
             }
-            
-            if(CollectionUtils.isEmpty(matchList)) {
-            
+
+            if (CollectionUtils.isEmpty(matchList)) {
+
                 System.setProperty(CricApiConfiguration.API_KEY_PROP, apiKeyField.getText());
                 populateMatchList();
-                
-            }
-            else {
+
+            } else {
                 submitted();
             }
         });
         return b;
     }
-    
+
     private boolean validatedInputFields() {
 
         return true;
     }
 
     private void populateMatchList() {
-        
+
         try {
             matchList = scoreService.getCurrentMatches();
-            
-            if(CollectionUtils.isEmpty(matchList)) {
+
+            if (CollectionUtils.isEmpty(matchList)) {
                 setMessage("no ongoing matches");
-            }
-            else {
+            } else {
                 populateCombo();
                 setAllEnabled(true);
                 setMessage("select match to get popup notifcation");
             }
             apiKeyField.setEnabled(false);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             LOG.warn(e.getMessage(), e);
             setMessage(e.getMessage());
         }
     }
-    
-    
+
     private void populateCombo() {
 
         matchList.forEach(m -> matchesCombo.addItem(getMatchItem(m)));
     }
 
     private void setAllEnabled(boolean enabled) {
-        
+
         matchesCombo.setEnabled(enabled);
         popupTimeField.setEnabled(enabled);
         popupFreuencyField.setEnabled(enabled);
-        
-        if(enabled && matchesCombo.getItemCount() > 0) {
+
+        if (enabled && matchesCombo.getItemCount() > 0) {
             matchesCombo.setSelectedIndex(0);
         }
     }
-    
+
     private void setMessage(String msg) {
+
         msgLabel.setText(msg);
     }
 }

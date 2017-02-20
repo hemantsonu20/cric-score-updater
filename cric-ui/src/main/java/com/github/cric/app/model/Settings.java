@@ -16,13 +16,16 @@
  */
 package com.github.cric.app.model;
 
+import java.io.Serializable;
 
 /**
  * @author heman
  *
  */
-public class Settings {
+public class Settings implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     private final int matchId;
     private final int popupTime;
     private final int popupFrequency;

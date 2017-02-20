@@ -38,24 +38,17 @@ public class UiApplication implements CommandLineRunner {
     public static final int DEFAULT_POPUP_FREQUENCY = 20;
     public static final int DEFAULT_POPUP_TIME = 10;
 
-    public static void main(String[] args) {
-
-        new SpringApplicationBuilder(UiApplication.class).headless(false).web(false).run(args);
-    }
-
     @Autowired
     private MainLock mainLock;
 
     @Autowired
     private ContextService contextService;
-    
+
     @Autowired
     private ScoreService scoreService;
 
     @Override
     public void run(String... args) throws Exception {
-
-        // List<Match> m = service.getCurrentMatches("INDIA");
 
         SettingFrame settingsFrame = new SettingFrame(scoreService, mainLock);
         SwingUtilities.invokeLater(() -> settingsFrame.setVisible(true));
@@ -66,6 +59,11 @@ public class UiApplication implements CommandLineRunner {
             contextService.schedulePopup(settingsFrame.getSettings());
         }
     }
+
+    public static void main(String[] args) {
+
+        new SpringApplicationBuilder(UiApplication.class).headless(false).web(false).run(args);
+    }
 }
 // logging in file
 // task bar icon, jar icon
@@ -73,4 +71,3 @@ public class UiApplication implements CommandLineRunner {
 // validation if empty fields
 // store current values from file
 // Help menu
-// minimize frame if outside clicked
