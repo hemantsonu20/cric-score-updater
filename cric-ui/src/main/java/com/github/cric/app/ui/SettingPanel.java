@@ -23,6 +23,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -56,9 +57,9 @@ public class SettingPanel extends JPanel {
     private ScoreService scoreService;
 
     private JComboBox<String> matchesCombo = new JComboBox<>();
-    private JTextField apiKeyField = textField("DjzldW0zisZt3GWyRiiCjD7QAd72");
-    private JTextField popupTimeField = textField(Integer.toString(UiApplication.DEFAULT_POPUP_TIME));
-    private JTextField popupFreuencyField = textField(Integer.toString(UiApplication.DEFAULT_POPUP_FREQUENCY));
+    private JTextField apiKeyField = textField("DjzldW0zisZt3GWyRiiCjD7QAd72", false);
+    private JTextField popupTimeField = textField(Integer.toString(UiApplication.DEFAULT_POPUP_TIME), true);
+    private JTextField popupFreuencyField = textField(Integer.toString(UiApplication.DEFAULT_POPUP_FREQUENCY), true);
     private JButton submitButton;
 
     private JLabel msgLabel = new JLabel("enter api key provided by cricapi.com");
@@ -124,24 +125,46 @@ public class SettingPanel extends JPanel {
         LOG.debug("current selected index in combo {}", selected);
     }
 
-    private JTextField textField(String defaultValue) {
+    private JTextField textField(String defaultValue, boolean isInt) {
 
         JTextField field = new JTextField(defaultValue);
+        addBorder(field, Color.GRAY);
         field.addFocusListener(new FocusListener() {
 
             @Override
             public void focusLost(FocusEvent e) {
 
-                // NO-OP
+                handleFocusLost(field, isInt);
             }
 
             @Override
             public void focusGained(FocusEvent e) {
 
+                addBorder(field, Color.GRAY);
                 field.selectAll();
             }
         });
         return field;
+    }
+
+    private void handleFocusLost(JTextField field, boolean isInt) {
+
+        if (isInt) {
+            if (!validateInt(field)) {
+                addBorder(field, Color.RED);
+            } 
+            else {
+                addBorder(field, Color.GRAY);
+            }
+        } 
+        else {
+            if (!validateText(field)) {
+                addBorder(field, Color.RED);
+            } 
+            else {
+                addBorder(field, Color.GRAY);
+            }
+        }
     }
 
     private JLabel label(String defaultValue, String mnemonic) {
@@ -173,11 +196,6 @@ public class SettingPanel extends JPanel {
             }
         });
         return b;
-    }
-
-    private boolean validatedInputFields() {
-
-        return true;
     }
 
     private void populateMatchList() {
@@ -218,5 +236,37 @@ public class SettingPanel extends JPanel {
     private void setMessage(String msg) {
 
         msgLabel.setText(msg);
+    }
+
+    private boolean validatedInputFields() {
+
+        return validateText(apiKeyField) && validateInt(popupTimeField) && validateInt(popupFreuencyField);
+    }
+
+    private void addBorder(JTextField f, Color c) {
+
+        f.setBorder(BorderFactory.createLineBorder(c));
+    }
+
+    private boolean validateInt(JTextField f) {
+
+        try {
+            int i = Integer.parseInt(f.getText());
+            if (i <= 0) {
+
+                return false;
+            }
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private boolean validateText(JTextField f) {
+
+        if (f.getText().length() <= 0) {
+            return false;
+        }
+        return true;
     }
 }
