@@ -33,7 +33,7 @@ public final class Settings implements Serializable {
 
     public Settings(int matchId, int popupTime, int popupFrequency) {
 
-        this(matchId, popupTime, popupFrequency, null);
+        this(matchId, popupTime, popupFrequency, "");
     }
 
     @JsonCreator

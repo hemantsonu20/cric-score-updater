@@ -16,11 +16,19 @@
  */
 package com.github.cric.app.ui;
 
+import static com.github.cric.common.service.cripapi.CricApiConfiguration.API_KEY_PROP;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URI;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -40,7 +48,6 @@ import com.github.cric.app.model.Settings;
 import com.github.cric.app.service.PersistingService;
 import com.github.cric.common.model.Match;
 import com.github.cric.common.service.ScoreService;
-import com.github.cric.common.service.cripapi.CricApiConfiguration;
 
 public class SettingPanel extends JPanel {
 
@@ -51,6 +58,8 @@ public class SettingPanel extends JPanel {
     private static final int GAP = 5;
     private static final int MAX_MSG_WIDTH = 80;
     private static final String MATCH_FORMAT = "%s V %s";
+    private static final String HELP_TEXT = "<html><strong style='color: blue; text-decoration: underline;'>Help</strong></html>";
+    private static final URI HELP_PAGE = URI.create("https://github.com/hemantsonu20/cric-score-updater");
 
     private SettingFrame parentFrame;
     private List<Match> matchList;
@@ -72,20 +81,37 @@ public class SettingPanel extends JPanel {
         this.persistingService = new PersistingService();
 
         Settings currentSettings = persistingService.getSettings();
-        LOG.debug("current setting {}", currentSettings.getApiKey());
-        System.setProperty(CricApiConfiguration.API_KEY_PROP, currentSettings.getApiKey());
-        
+        System.setProperty(API_KEY_PROP, currentSettings.getApiKey());
+
         this.matchesCombo = new JComboBox<>();
         this.apiKeyField = textField(currentSettings.getApiKey(), false);
         this.popupTimeField = textField(Integer.toString(currentSettings.getPopupTime()), true);
         this.popupFreuencyField = textField(Integer.toString(currentSettings.getPopupFrequency()), true);
         this.submitButton = submitButton();
         this.msgLabel = new JLabel("    ");
-        
+
         initUI();
     }
 
     private void initUI() {
+
+        setLayout(new BorderLayout(GAP, GAP));
+        setBorder(new EmptyBorder(MARGIN, MARGIN, MARGIN, MARGIN));
+
+        add(getFormPanel(), BorderLayout.NORTH);
+        add(getSubmitPanel(), BorderLayout.CENTER);
+
+        msgLabel.setForeground(Color.MAGENTA);
+        msgLabel.setHorizontalAlignment(JLabel.CENTER);
+        add(msgLabel, BorderLayout.SOUTH);
+
+        populateMatchList();
+        if (CollectionUtils.isEmpty(matchList)) {
+            setAllEnabled(false);
+        }
+    }
+
+    private Component getFormPanel() {
 
         JPanel formPanel = new JPanel(new GridLayout(4, 2, MARGIN, MARGIN));
 
@@ -102,23 +128,22 @@ public class SettingPanel extends JPanel {
         formPanel.add(label("Popup Frequency (sec)", "popup will appear repeatedly"));
         formPanel.add(popupFreuencyField);
 
+        return formPanel;
+    }
+
+    private JPanel getSubmitPanel() {
+
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        
         JPanel submitPanel = new JPanel();
         submitPanel.add(submitButton);
-
-        setLayout(new BorderLayout(GAP, GAP));
-        setBorder(new EmptyBorder(MARGIN, MARGIN, MARGIN, MARGIN));
-
-        add(formPanel, BorderLayout.NORTH);
-        add(submitPanel, BorderLayout.CENTER);
-
-        msgLabel.setForeground(Color.MAGENTA);
-        msgLabel.setHorizontalAlignment(JLabel.CENTER);
-        add(msgLabel, BorderLayout.SOUTH);
         
-        populateMatchList();
-        if (CollectionUtils.isEmpty(matchList)) {
-            setAllEnabled(false);
-        }
+        JPanel helpPanel = new JPanel();
+        helpPanel.add(helpLabel());
+        
+        mainPanel.add(submitPanel, BorderLayout.CENTER);
+        mainPanel.add(helpPanel, BorderLayout.EAST);
+        return mainPanel;
     }
 
     private String getMatchItem(Match m) {
@@ -134,8 +159,8 @@ public class SettingPanel extends JPanel {
             int matchId = matchList.get(selected).getMatchId();
             int popupTime = Integer.parseInt(popupTimeField.getText());
             int popupFrequency = Integer.parseInt(popupFreuencyField.getText());
-            String apiKey = System.getProperty(CricApiConfiguration.API_KEY_PROP);
-            
+            String apiKey = System.getProperty(API_KEY_PROP);
+
             Settings updatedSettings = new Settings(matchId, popupTime, popupFrequency, apiKey);
             persistingService.saveSettings(updatedSettings);
             parentFrame.submitted(updatedSettings);
@@ -213,7 +238,7 @@ public class SettingPanel extends JPanel {
 
             if (CollectionUtils.isEmpty(matchList)) {
 
-                System.setProperty(CricApiConfiguration.API_KEY_PROP, apiKeyField.getText());
+                System.setProperty(API_KEY_PROP, apiKeyField.getText());
                 populateMatchList();
 
             }
@@ -224,7 +249,45 @@ public class SettingPanel extends JPanel {
         return b;
     }
 
+    private Component helpLabel() {
+
+        JLabel help = new JLabel(HELP_TEXT);
+        help.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+                help.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+                help.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                if (Desktop.isDesktopSupported()) {
+                    try {
+                        Desktop.getDesktop().browse(HELP_PAGE);
+                    } catch (Exception ex) {
+                        LOG.warn("unable to open link", e);
+                    }
+                }
+            }
+        });
+        return help;
+    }
+
     private void populateMatchList() {
+
+        if (StringUtils.isBlank(System.getProperty(API_KEY_PROP))) {
+
+            setMessage("enter api key provided by cricapi.com");
+            return;
+        }
 
         try {
             matchList = scoreService.getCurrentMatches();

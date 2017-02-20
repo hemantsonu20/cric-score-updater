@@ -26,12 +26,10 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import com.github.cric.app.service.ContextService;
 import com.github.cric.app.service.MainLock;
 import com.github.cric.app.ui.SettingFrame;
-import com.github.cric.common.EnableCommonCricLib;
 import com.github.cric.common.EnableCricApiDotCom;
 import com.github.cric.common.service.ScoreService;
 
 @SpringBootApplication
-@EnableCommonCricLib
 @EnableCricApiDotCom
 public class UiApplication implements CommandLineRunner {
 
@@ -66,5 +64,4 @@ public class UiApplication implements CommandLineRunner {
     }
 }
 // logging in file
-// Help menu
 // default time and freq 5 and 30
