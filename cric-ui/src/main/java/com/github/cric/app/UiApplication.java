@@ -69,8 +69,8 @@ public class UiApplication implements CommandLineRunner {
 }
 // logging in file
 // task bar icon, jar icon
-// number only entry in > 0 in setting panel
+// number only entry in > 0 in setting panel,
 // validation if empty fields
 // store current values from file
 // Help menu
-// alignment of msglabel
+// minimize frame if outside clicked

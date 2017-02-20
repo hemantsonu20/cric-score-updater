@@ -17,13 +17,11 @@
 package com.github.cric.app.ui;
 
 import java.awt.BorderLayout;
-import java.util.List;
 
 import javax.swing.JFrame;
 
 import com.github.cric.app.model.Settings;
 import com.github.cric.app.service.MainLock;
-import com.github.cric.common.model.Match;
 import com.github.cric.common.service.ScoreService;
 
 public class SettingFrame extends JFrame {

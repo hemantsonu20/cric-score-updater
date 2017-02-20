@@ -16,37 +16,38 @@
  */
 package com.github.cric.common.exception;
 
-
-
 public class RemoteException extends CricException {
 
     private static final long serialVersionUID = 1L;
-    
+
     private int status;
     private String body;
 
     public RemoteException() {
         super();
     }
-    
+
     public RemoteException(int status) {
-        this(status, "", null);
+        super(String.format("remote error status %d", status));
+        this.status = status;
     }
-    
+
     public RemoteException(String body) {
-        this(-1, body, null);
+        this(body, null);
     }
-    
+
     public RemoteException(int status, String body) {
         this(status, body, null);
     }
-    
+
     public RemoteException(String body, Throwable t) {
-        this(-1, body, t);
+        super(String.format("remote error response %s", body), t);
+        this.body = body;
     }
-    
+
     public RemoteException(int status, String body, Throwable t) {
-        super(String.format("remote error occurred status %d response body %s", status, body));
+
+        super(String.format("remote error status %d response %s", status, body), t);
         this.status = status;
         this.body = body;
     }

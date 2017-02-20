@@ -21,7 +21,6 @@ import java.net.URI;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -41,9 +40,7 @@ public class CricApiConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(CricApiConfiguration.class);
 
     private static final String API_KEY = "apikey";
-
-    @Value("${cric.api.key}")
-    private String apiKey;
+    public static final String API_KEY_PROP = "cric.api.key";
 
     @Bean
     public RestTemplate cricApiRestTemplate() {
@@ -67,7 +64,7 @@ public class CricApiConfiguration {
                 @Override
                 public URI getURI() {
 
-                    return UriComponentsBuilder.fromUri(super.getURI()).queryParam(API_KEY, apiKey).build().toUri();
+                    return UriComponentsBuilder.fromUri(super.getURI()).queryParam(API_KEY, System.getProperty(API_KEY_PROP)).build().toUri();
                 }
             };
             return execution.execute(modified, body);

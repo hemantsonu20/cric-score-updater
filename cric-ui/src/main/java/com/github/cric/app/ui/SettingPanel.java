@@ -16,18 +16,19 @@
  */
 package com.github.cric.app.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,17 +38,22 @@ import com.github.cric.app.UiApplication;
 import com.github.cric.app.model.Settings;
 import com.github.cric.common.model.Match;
 import com.github.cric.common.service.ScoreService;
+import com.github.cric.common.service.cripapi.CricApiConfiguration;
 
 public class SettingPanel extends JPanel {
 
+    private static final long serialVersionUID = 1L;
     
     private static final Logger LOG = LoggerFactory.getLogger(SettingPanel.class);
     
+    private static final int MARGIN = 10;
+    private static final int GAP = 5;
     
-    private static final long serialVersionUID = 1L;
     private static final String MATCH_FORMAT = "%s V %s";
 
-    private SettingFrame parent;
+    
+
+    private SettingFrame parentFrame;
     private List<Match> matchList;
     private ScoreService scoreService;
 
@@ -55,14 +61,16 @@ public class SettingPanel extends JPanel {
     private JTextField apiKeyField = textField("api key");
     private JTextField popupTimeField = textField(Integer.toString(UiApplication.DEFAULT_POPUP_TIME));
     private JTextField popupFreuencyField = textField(Integer.toString(UiApplication.DEFAULT_POPUP_FREQUENCY));
+    private JButton submitButton;
     
     private JLabel msgLabel = new JLabel("enter api key provided by cricapi.com");
 
     public SettingPanel(SettingFrame parent, ScoreService scoreService) {
 
         super();
-        this.parent = parent;
+        this.parentFrame = parent;
         this.scoreService = scoreService;
+        this.submitButton = submitButton();
 
         JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
 
@@ -80,16 +88,18 @@ public class SettingPanel extends JPanel {
         formPanel.add(popupFreuencyField);
 
         JPanel submitPanel = new JPanel();
-        submitPanel.add(scheduleButton());
+        submitPanel.add(submitButton);
         
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(formPanel);
-        add(submitPanel);
+        setLayout(new BorderLayout(GAP, GAP));
+        setBorder(new EmptyBorder(MARGIN, MARGIN, MARGIN, MARGIN));
+        
+        add(formPanel, BorderLayout.NORTH);
+        add(submitPanel, BorderLayout.CENTER);
         setAllEnabled(false);
         
         msgLabel.setForeground(Color.MAGENTA);
-        msgLabel.setHorizontalAlignment(JLabel.LEFT);
-        add(msgLabel);
+        msgLabel.setHorizontalAlignment(JLabel.CENTER);
+        add(msgLabel, BorderLayout.SOUTH);
     }
 
     private String getMatchItem(Match m) {
@@ -101,17 +111,20 @@ public class SettingPanel extends JPanel {
 
         int selected = matchesCombo.getSelectedIndex();
         
-        if(selected > 0) {
+        if(selected >= 0) {
             int matchId = matchList.get(selected).getMatchId();
             int popupTime = Integer.parseInt(popupTimeField.getText());
             int popupFrequency = Integer.parseInt(popupFreuencyField.getText());
-            parent.submitted(new Settings(matchId, popupTime, popupFrequency));
+            parentFrame.submitted(new Settings(matchId, popupTime, popupFrequency));
             setMessage("notification scheduled, close this window to stop");
+            
+            setAllEnabled(false);
+            submitButton.setEnabled(false);
         }
         else {
-            LOG.warn("no items in match combo");
-            parent.submitted(null);
+            setMessage("no matches selected");
         }
+        LOG.debug("current selected index in conbo {}", selected);
     }
 
     private JTextField textField(String defaultValue) {
@@ -142,24 +155,38 @@ public class SettingPanel extends JPanel {
         return label;
     }
 
-    private JButton scheduleButton() {
+    private JButton submitButton() {
 
         JButton b = new JButton("Schedule");
-        parent.getRootPane().setDefaultButton(b);
+        b.setToolTipText("Schedule for score update");
+        parentFrame.getRootPane().setDefaultButton(b);
         b.addActionListener(e -> {
             
+            
+            
+            if(!validatedInputFields()) {
+                return;
+            }
+            
             if(CollectionUtils.isEmpty(matchList)) {
-                populate();
+            
+                System.setProperty(CricApiConfiguration.API_KEY_PROP, apiKeyField.getText());
+                populateMatchList();
+                
             }
             else {
-                b.setEnabled(false);
                 submitted();
             }
         });
         return b;
     }
     
-    private void populate() {
+    private boolean validatedInputFields() {
+
+        return true;
+    }
+
+    private void populateMatchList() {
         
         try {
             matchList = scoreService.getCurrentMatches();
@@ -168,10 +195,11 @@ public class SettingPanel extends JPanel {
                 setMessage("no ongoing matches");
             }
             else {
-                matchList.forEach(m -> matchesCombo.addItem(getMatchItem(m)));
+                populateCombo();
                 setAllEnabled(true);
-                setMessage("choose match for get popup notifcation");
+                setMessage("select match to get popup notifcation");
             }
+            apiKeyField.setEnabled(false);
         }
         catch(Exception e) {
             LOG.warn(e.getMessage(), e);
@@ -179,15 +207,21 @@ public class SettingPanel extends JPanel {
         }
     }
     
+    
+    private void populateCombo() {
+
+        matchList.forEach(m -> matchesCombo.addItem(getMatchItem(m)));
+    }
+
     private void setAllEnabled(boolean enabled) {
         
-//        if(matchesCombo.getItemCount() > 0) {
-//            matchesCombo.setSelectedIndex(0);
-//        }
-
         matchesCombo.setEnabled(enabled);
         popupTimeField.setEnabled(enabled);
         popupFreuencyField.setEnabled(enabled);
+        
+        if(enabled && matchesCombo.getItemCount() > 0) {
+            matchesCombo.setSelectedIndex(0);
+        }
     }
     
     private void setMessage(String msg) {
