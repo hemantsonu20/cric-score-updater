@@ -19,4 +19,3 @@ A desktop java application which shows score via a popup repeatedly.
 
 ![Popup Screen](docs/popup.PNG)
 
-
