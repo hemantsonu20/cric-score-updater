@@ -7,6 +7,22 @@ script:
 #  - mvn sonar:sonar
 #  - mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar
 
+before_deploy:
+  - git config --global user.email "builds@travis-ci.com"
+  - git config --global user.name "Travis CI"
+  - export GIT_TAG=$TRAVIS_BRANCH-v0.1.$TRAVIS_BUILD_NUMBER
+  - git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
+  - git push -q https://$GITHUB_TOKEN@github.com/hemantsonu20/jwt-cracker --tags
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file: cric-score-updater/target/cric-ui-0.0.1-SNAPSHOT.jar
+  skip_cleanup: true
+  on:
+    tags: false
+    branch: master
+
 notifications:
   email
     - hemantsonu20@gmail.com
@@ -17,6 +33,3 @@ addons:
       
 before_install:
   - chmod +x ./travis.sh
-#branches:
-#  only:
-#    - master
