@@ -10,6 +10,9 @@ A desktop java application which shows score via a popup repeatedly.
 
 ![Configuration Screen](docs/setting-frame.PNG)
 
+# Downloads
+Download an executable jar form the releases section of the repository. [RELEASE](/releases)
+
 # Snapshots
 **Configuration screen after api key provided**: When api key is provided, matches combo box is populated with current ongoing matches. Once you select the match, popup notification will be scheduled.
 
