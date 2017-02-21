@@ -21,4 +21,3 @@ Download an executable jar form the releases section of the repository. [RELEASE
 **Sample poupup notification**
 
 ![Popup Screen](docs/popup.PNG)
-
