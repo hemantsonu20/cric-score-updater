@@ -33,11 +33,6 @@ public class PersistingService {
     private static final String HOME_DIR = System.getProperty("user.home");
     private static final String SETTING_FILE = ".cric-score-updater";
 
-    private static final Settings DEFAULT_SETTING = new Settings(
-            0,
-            UiApplication.DEFAULT_POPUP_TIME,
-            UiApplication.DEFAULT_POPUP_FREQUENCY);
-
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public void saveSettings(Settings settings) {
@@ -53,10 +48,15 @@ public class PersistingService {
     public Settings getSettings() {
 
         try {
-            return MAPPER.readValue(new File(HOME_DIR, SETTING_FILE), Settings.class);
+            File f = new File(HOME_DIR, SETTING_FILE);
+
+            if (f.exists()) {
+                return MAPPER.readValue(f, Settings.class);
+            }
+
         } catch (IOException e) {
             LOG.warn("reading from file failed", e);
-            return DEFAULT_SETTING;
         }
+        return new Settings(0, UiApplication.DEFAULT_POPUP_TIME, UiApplication.DEFAULT_POPUP_FREQUENCY);
     }
 }
