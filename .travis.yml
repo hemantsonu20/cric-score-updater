@@ -12,7 +12,7 @@ before_deploy:
   - git config --global user.name "Travis CI"
   - export GIT_TAG=$TRAVIS_BRANCH-v0.1.$TRAVIS_BUILD_NUMBER
   - git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
-  - git push -q https://$GITHUB_TOKEN@github.com/hemantsonu20/jwt-cracker --tags
+  - git push -q https://$GITHUB_TOKEN@github.com/hemantsonu20/cric-score-updater --tags
 
 deploy:
   provider: releases
