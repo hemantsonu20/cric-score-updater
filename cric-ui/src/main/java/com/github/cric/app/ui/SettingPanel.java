@@ -62,9 +62,9 @@ public class SettingPanel extends JPanel {
     private static final URI HELP_PAGE = URI.create("https://github.com/hemantsonu20/cric-score-updater");
 
     private SettingFrame parentFrame;
-    private List<Match> matchList;
-    private ScoreService scoreService;
-    private PersistingService persistingService;
+    private transient List<Match> matchList;
+    private transient ScoreService scoreService;
+    private transient PersistingService persistingService;
 
     private JComboBox<String> matchesCombo;
     private JTextField apiKeyField;
@@ -273,7 +273,7 @@ public class SettingPanel extends JPanel {
                     try {
                         Desktop.getDesktop().browse(HELP_PAGE);
                     } catch (Exception ex) {
-                        LOG.warn("unable to open link", e);
+                        LOG.warn("unable to open link", ex);
                     }
                 }
             }

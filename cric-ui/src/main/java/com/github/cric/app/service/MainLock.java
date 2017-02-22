@@ -33,7 +33,7 @@ public class MainLock implements Serializable {
     private static final long serialVersionUID = 1L;
     
     // thread to wait for new updates available
-    private CountDownLatch latch;
+    private transient CountDownLatch latch;
 
     public void lock() {
 

@@ -43,7 +43,7 @@ public class NotificationWindow extends JDialog {
     private final JLabel messageLabel = new JLabel("(00.0 ov, xxxxx 00, xxxxx 00)");
     private final JLabel requirementLabel = new JLabel("000 run required to win");
 
-    private final GraphicsDevice graphicsDevice = GraphicsEnvironment
+    private final transient GraphicsDevice graphicsDevice = GraphicsEnvironment
             .getLocalGraphicsEnvironment()
             .getDefaultScreenDevice();
 
@@ -74,13 +74,7 @@ public class NotificationWindow extends JDialog {
     public void showMsg(PopupMessage popupMessage) {
 
         setMessage(popupMessage);
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                NotificationWindow.this.setVisible(true);
-            }
-        });
+        SwingUtilities.invokeLater(() -> NotificationWindow.this.setVisible(true));
     }
 
     private void setMessage(PopupMessage popupMessage) {
@@ -91,9 +85,6 @@ public class NotificationWindow extends JDialog {
     }
 
     private boolean isTranslucencySupported() {
-
-        GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice graphicsDevice = graphicsEnvironment.getDefaultScreenDevice();
 
         return graphicsDevice.isWindowTranslucencySupported(WindowTranslucency.TRANSLUCENT);
     }
