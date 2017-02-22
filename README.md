@@ -21,4 +21,3 @@ Download an executable jar cric-ui-0.0.1-SNAPSHOT.jar from the releases section 
 **Sample poupup notification**
 
 ![Popup Screen](docs/popup.PNG)
-
