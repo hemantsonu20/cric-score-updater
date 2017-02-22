@@ -24,6 +24,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,12 +38,12 @@ import com.github.cric.common.service.ScoreService;
 @Component
 public class CricApiContext implements CricContext, DisposableBean {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CricApiContext.class);
+    
     public static final int DEFAULT_INITIAL_POPUP_DELAY = 10;
     
     private static final Map<SummaryScoreListener, ScheduledFuture<?>> FUTURE = new HashMap<>();
     private static final ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(1);
-
-    
 
     @Autowired
     private ScoreService scoreService;
@@ -50,6 +52,7 @@ public class CricApiContext implements CricContext, DisposableBean {
      * Register a SummaryScoreListener which will be scheduled to execute.
      * 
      */
+    @Override
     public void registerSummaryScoreListener(SummaryScoreListener s, int matchId, int seconds) {
 
         
@@ -90,8 +93,8 @@ public class CricApiContext implements CricContext, DisposableBean {
                 s.updateSummaryScore(r);
             } catch (Exception e) {
 
+                LOG.debug("ignoring exception from listener", e);
             }
-
         };
     }
 
