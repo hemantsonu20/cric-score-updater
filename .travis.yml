@@ -1,35 +1,44 @@
 language: java
-jdk: 
-  - oraclejdk8
+jdk:
+  - openjdk8
+branches:
+  except:
+    - "/master-v0\\.1.*/"
+install: true
+before_script:
+  - chmod +x ./travis.sh
 script:
-  - ./travis.sh
-#  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install 
-#  - mvn sonar:sonar
-#  - mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar
-
+  - "./travis.sh"
 before_deploy:
   - git config --global user.email "builds@travis-ci.com"
   - git config --global user.name "Travis CI"
   - export GIT_TAG=$TRAVIS_BRANCH-v0.1.$TRAVIS_BUILD_NUMBER
   - git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
   - git push -q https://$GITHUB_TOKEN@github.com/hemantsonu20/cric-score-updater --tags
-
 deploy:
   provider: releases
-  api_key: $GITHUB_TOKEN
+  api_key: "$GITHUB_TOKEN"
   file: cric-ui/target/cric-ui-0.0.1-SNAPSHOT.jar
   skip_cleanup: true
   on:
     tags: false
     branch: master
-
-notifications:
-  email
-    - hemantsonu20@gmail.com
 addons:
-  sonarqube:
+  sonarcloud:
+    organization: hemantsonu20-github
     token:
-      secure: $SONAR_GITHUB_TOKEN
-      
-before_install:
-  - chmod +x ./travis.sh
+      secure: "$SONAR_TOKEN"
+cache:
+  directories:
+    - "$HOME/.m2/repository"
+    - "$HOME/.sonar/cache"
+notifications:
+  email:
+    recipients:
+      - hemantsonu20@gmail.com
+    on_success: change
+    on_failure: always
+env:
+  global:
+    - secure: bB1BBHE2kmeYV1kGckkWS0cbr6YbGg0GNK50L3XwVoX04qu4tOYDQpRwgIPb30gxZK3UMjF1Oy4lFxNTNwOaiGPAliLhhm1Qo4p3AiwaJ18VRULnfCE6USqjVhDCXkuNgPsOY0/+0pw7TVVTMP0Mg1sg1SS3I7L6HJDfz+olFqhaJn5lsJwi1nxRIvotEUBUB42XUwpbr/lJMyQqcFWu5sJWET5I6+aP/Gl5M9d67dnZvrFc3nVzv4aQjkp4Bc5VOLYAO23aDlLyJrtqWJClN5rTpUFolbC/LTn6JSSNPmm/B87y+k5+byCFRqF0hPt2d3EKMo+3qDYXTHXSmye0SS/7IZ2cXuir7apIB4aY1aLRRYSq0N9KoQarOp4taDeIrp4Wfc8AuwihGC1qO3RYVzZ/MiTAgLBVZySWn6BOgJvL7YEJGXEIIHZyGj/Bx8vTwvJLdW+gRNDpAVgnMSAXIjB3GyToZoaD8N+ej/lLPaxktXpxXbmvH8ZBdhu98JdxoikW/03de3oDQovHOcmdbUzIbapDy4Ti154kxPA3O7i9w/MhG08PsKHUSbbS82MirUsN+u/eNCreKHocQRmX3WUvBOthRNeNxakqSzsaLodVPEJDPZKuly7EZjl19PYHwdiRz6EiCnNZg2bYOQOTp4BV9KOOKsWyXCntGBrX9Os=
+    - secure: oJIYAJSIFGdsEiLh+E2zEB4FONLBRCdOcixaVx5LkqTpxODnKLIVdOchHQa/Rj/e65XWO8d+LvPT0yWwCXSSt+FCBhrP+J9sbO+sdvVr3T8ZwucnsTNffIn+5LGmqtk0F6fMe4xh2DZUZ3eydbRh9yxL1evrVnX/sIO35YZCqs7Ngz/h/PNRW6TzdZK6JF7O/iSGYoT/+NCwPHUHsFcNt3no3fasMmyUiY9RT2uDbYxmHg1DF3YAnZLug28M7xQtS+mmPsOpqZ0rG8W4GbL3lx1jGY716rdiw8EsNJKn33X+QkPdX4SXnIYOL4X0dT7rbUYfgXolzrH7D7j3UbbnP5mPCuzW2zbmGz12X8wYcyUwg55+W9K3wF40kRFlfrrUfFXwjvz+oH/AblnyoP35vPndRHDIjJbQybapQM256WU5Xx/yh+0k4IZBjLDdQKNvSEVHPqfJbTV+xoauDA9IEx/neS7G5I1iIuronL+05P8UhBaqSNNiwc20eZStt2nEji7Wryd17GhmtOLKorwWLSV2qcb2Z8WcmCEKxUqRUad1YRMcmfWiB0uazaMqAXl6SCLyzFbTG1s0GF28t7h20tZKPHxOsYy2Qkg7+14mu5+v99H1JfYrYfQMiFn9gHNIaRQxCF19gINM/b7xJqETPNxg1HHn/GrL9Y7ayCJueR0=
