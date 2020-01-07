@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.com/hemantsonu20/cric-score-updater.svg?branch=master)](https://travis-ci.com/hemantsonu20/cric-score-updater) (By Travis CI)
-
+[![Build Status](https://travis-ci.com/hemantsonu20/cric-score-updater.svg?branch=master)](https://travis-ci.com/hemantsonu20/cric-score-updater)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.github.hemantsonu20%3Acric-score-updater&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.github.hemantsonu20%3Acric-score-updater)
 # Cric Score Updater
 A desktop java application which shows score via a popup repeatedly.
 
