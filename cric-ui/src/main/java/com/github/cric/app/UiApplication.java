@@ -63,5 +63,3 @@ public class UiApplication implements CommandLineRunner {
         new SpringApplicationBuilder(UiApplication.class).headless(false).web(false).run(args);
     }
 }
-// read me update
-// travis ci release

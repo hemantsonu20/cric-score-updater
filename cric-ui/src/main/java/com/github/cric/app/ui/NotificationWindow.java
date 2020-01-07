@@ -29,6 +29,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import com.github.cric.app.model.PopupMessage;
@@ -57,9 +58,6 @@ public class NotificationWindow extends JDialog {
         setLayout(new BorderLayout());
         setSize(400, 110);
         setLocationRelativeTo(null);
-        if (isTranslucencySupported()) {
-            setOpacity(0.80f);
-        }
         setAlwaysOnTop(true);
         setResizable(false);
         
@@ -81,7 +79,11 @@ public class NotificationWindow extends JDialog {
 
         setTitle(popupMessage.getHeading());
         messageLabel.setText(String.format(HTML_FORMAT, popupMessage.getMessage()));
-        requirementLabel.setText(String.format(HTML_FORMAT, popupMessage.getRequirement()));
+        if(StringUtils.isNotBlank(popupMessage.getRequirement())) {
+            requirementLabel.setText(String.format(HTML_FORMAT, popupMessage.getRequirement()));
+        } else {
+            requirementLabel.setText("");
+        }
     }
 
     private boolean isTranslucencySupported() {
