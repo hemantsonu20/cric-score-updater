@@ -27,9 +27,10 @@ notifications:
   email
     - hemantsonu20@gmail.com
 addons:
-  sonarqube:
-    token:
-      secure: $SONAR_GITHUB_TOKEN
+  sonarcloud:
+    organization: hemantsonu20-github
+      token:
+        secure: "$SONAR_GITHUB_TOKEN"
       
 before_install:
   - chmod +x ./travis.sh
